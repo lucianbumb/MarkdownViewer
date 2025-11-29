@@ -144,6 +144,38 @@ ipcRenderer.on('recent-files-updated', (event, files) => {
   updateRecentFilesList();
 });
 
+// Keyboard shortcuts
+document.addEventListener('keydown', async (e) => {
+  // Ctrl + O - Open file
+  if (e.ctrlKey && e.key === 'o') {
+    e.preventDefault();
+    document.getElementById('open-file-btn').click();
+  }
+  
+  // Ctrl + + (or Ctrl + =) - Increase zoom
+  if (e.ctrlKey && (e.key === '+' || e.key === '=')) {
+    e.preventDefault();
+    const content = document.getElementById('content');
+    const currentZoom = parseFloat(content.style.fontSize || '16px');
+    content.style.fontSize = (currentZoom + 2) + 'px';
+  }
+  
+  // Ctrl + - - Decrease zoom
+  if (e.ctrlKey && e.key === '-') {
+    e.preventDefault();
+    const content = document.getElementById('content');
+    const currentZoom = parseFloat(content.style.fontSize || '16px');
+    content.style.fontSize = Math.max(10, currentZoom - 2) + 'px';
+  }
+  
+  // Ctrl + 0 - Reset zoom
+  if (e.ctrlKey && e.key === '0') {
+    e.preventDefault();
+    const content = document.getElementById('content');
+    content.style.fontSize = '';
+  }
+});
+
 // Load recent files on startup
 (async () => {
   recentFiles = await ipcRenderer.invoke('get-recent-files');
