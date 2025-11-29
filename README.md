@@ -14,20 +14,10 @@ A fast, lightweight Markdown viewer for Windows 11 built with Electron.
 
 ## 🚀 Quick Start
 
-### Development
-
 ```powershell
+npm install
 npm start
 ```
-
-### Build Installer
-
-```powershell
-npm run build-win
-```
-
-This creates a Windows installer in `dist/` folder:
-- `Markdown Viewer Setup 1.0.0.exe`
 
 ## 📦 Installation
 
@@ -41,16 +31,11 @@ winget install ElgibeSolutions.MarkdownViewer
 
 The app will be available soon via winget!
 
-### Manual Installation
+### Download Installer
 
-1. Run `npm run build-win` to create the installer
-2. Navigate to `dist/` folder
-3. Run the `Markdown Viewer Setup 1.0.0.exe` installer
-4. Follow the installation wizard
-5. After installation, right-click any `.md` file
-6. Select "Open with" → "Markdown Viewer"
+Download the latest installer from [GitHub Releases](https://github.com/lucianbumb/MarkdownViewer/releases)
 
-The app will automatically register for `.md` and `.markdown` file extensions!
+The app will automatically register for `.md` and `.markdown` file extensions.
 
 ## 💻 Usage
 

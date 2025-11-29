@@ -35,7 +35,7 @@
         "nsis",
         "appx"
       ],
-      "icon": "markdownviewer.png",
+      "icon": "markdownviewer.ico",
       "fileAssociations": [
         {
           "ext": "md",

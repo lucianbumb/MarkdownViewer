@@ -57,7 +57,7 @@ function createWindow(filePath = null) {
       nodeIntegration: true,
       contextIsolation: false,
     },
-    icon: path.join(__dirname, 'markdownviewer.png'),
+    icon: path.join(__dirname, 'markdownviewer.ico'),
   });
 
   // Remove the menu bar completely
