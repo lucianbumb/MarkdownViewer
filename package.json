@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Quick and easy Markdown file viewer. In the world of AI, countless .md files are created daily. This tool provides instant viewing of markdown files with beautiful rendering, syntax highlighting, and seamless integration with Windows Explorer. Set it as your default .md viewer for effortless access.",
   "main": "main.js",
-  "homepage": "https://elgibesolutions.net/",
+  "homepage": "https://markdownviewer.elgibesolutions.work/",
   "author": {
     "name": "ElgibeSolutions",
     "url": "https://elgibesolutions.net/"

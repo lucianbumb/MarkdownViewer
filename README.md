@@ -2,6 +2,8 @@
 
 A fast, lightweight Markdown viewer for Windows 11 built with Electron.
 
+🌐 **Official Website**: [markdownviewer.elgibesolutions.work](https://markdownviewer.elgibesolutions.work/)
+
 ## ✨ Features
 
 - **Fast Rendering**: Optimized markdown parsing with marked.js
@@ -33,7 +35,9 @@ The app will be available soon via winget!
 
 ### Download Installer
 
-Download the latest installer from [GitHub Releases](https://github.com/lucianbumb/MarkdownViewer/releases)
+Download the latest installer from:
+- **Official Website**: [markdownviewer.elgibesolutions.work](https://markdownviewer.elgibesolutions.work/)
+- **GitHub Releases**: [github.com/lucianbumb/MarkdownViewer/releases](https://github.com/lucianbumb/MarkdownViewer/releases)
 
 The app will automatically register for `.md` and `.markdown` file extensions.
 
@@ -43,6 +47,15 @@ The app will automatically register for `.md` and `.markdown` file extensions.
 - Drag and drop `.md` files onto the window
 - Right-click `.md` files in Windows Explorer and open with Markdown Viewer
 - Double-click `.md` files after setting as default app
+
+### ⌨️ Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl + O` | Open Markdown file |
+| `Ctrl + +` | Increase text size |
+| `Ctrl + -` | Decrease text size |
+| `Ctrl + 0` | Reset zoom |
 
 ## 🎨 Supported Features
 
