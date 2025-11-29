@@ -31,6 +31,18 @@ This creates a Windows installer in `dist/` folder:
 
 ## 📦 Installation
 
+### Install via Windows Package Manager (winget)
+
+The easiest way to install Markdown Viewer is through winget:
+
+```powershell
+winget install ElgibeSolutions.MarkdownViewer
+```
+
+The app will be available soon via winget!
+
+### Manual Installation
+
 1. Run `npm run build-win` to create the installer
 2. Navigate to `dist/` folder
 3. Run the `Markdown Viewer Setup 1.0.0.exe` installer
