@@ -47,10 +47,6 @@ function addToRecentFiles(filePath) {
 }
 
 function createWindow(filePath = null) {
-  const iconPath = process.platform === 'win32' 
-    ? path.join(__dirname, 'markdownviewer.ico')
-    : path.join(__dirname, 'markdownviewer.png');
-    
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
@@ -61,16 +57,10 @@ function createWindow(filePath = null) {
       nodeIntegration: true,
       contextIsolation: false,
     },
-    icon: iconPath,
   });
 
   // Remove the menu bar completely
   mainWindow.setMenuBarVisibility(false);
-  
-  // Set taskbar icon explicitly for Windows
-  if (process.platform === 'win32') {
-    mainWindow.setIcon(iconPath);
-  }
 
   mainWindow.loadFile('index.html');
 

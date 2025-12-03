@@ -30,12 +30,17 @@
     "appId": "net.elgibesolutions.markdownviewer",
     "productName": "Markdown Viewer",
     "copyright": "Copyright © 2025 ElgibeSolutions",
+    "files": [
+      "**/*",
+      "!dist",
+      "!node_modules"
+    ],
     "win": {
       "target": [
         "nsis",
         "appx"
       ],
-      "icon": "markdownviewer.ico",
+      "icon": "build/icons/icon.ico",
       "fileAssociations": [
         {
           "ext": "md",
@@ -56,8 +61,10 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "installerHeaderIcon": "markdownviewer.ico",
-      "installerSidebar": "markdownviewer.png"
+      "shortcutName": "Markdown Viewer",
+      "installerIcon": "build/icons/icon.ico",
+      "uninstallerIcon": "build/icons/icon.ico",
+      "installerHeaderIcon": "build/icons/icon.ico"
     },
     "appx": {
       "applicationId": "MarkdownViewer",
