@@ -53,6 +53,7 @@ function createWindow(filePath = null) {
     minWidth: 600,
     minHeight: 400,
     autoHideMenuBar: true,
+    icon: path.join(__dirname, 'markdownviewer.ico'),
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -91,15 +92,15 @@ app.whenReady().then(() => {
   
   createWindow(filePath);
   
-  // Register global keyboard shortcuts
+  // Register global keyboard shortcuts after window is created
   globalShortcut.register('CommandOrControl+O', () => {
-    if (mainWindow && mainWindow.isFocused()) {
+    if (mainWindow) {
       mainWindow.webContents.send('trigger-open-file');
     }
   });
   
   globalShortcut.register('CommandOrControl+R', () => {
-    if (mainWindow && mainWindow.isFocused()) {
+    if (mainWindow) {
       mainWindow.webContents.send('trigger-recent-files');
     }
   });
