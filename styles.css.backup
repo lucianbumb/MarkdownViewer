@@ -1,0 +1,431 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  /* Light mode colors */
+  --color-text-primary: #24292e;
+  --color-text-secondary: #57606a;
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f6f8fa;
+  --color-border: #e1e4e8;
+  --color-border-muted: #d0d7de;
+  --color-accent: #0969da;
+  --color-accent-hover: #0550ae;
+  --color-accent-bg: rgba(9, 105, 218, 0.1);
+  --color-danger: #cf222e;
+  --color-danger-bg: #ffebe9;
+  --color-code-bg: #f6f8fa;
+  --color-quote-border: #d0d7de;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-text-primary: #e6edf3;
+    --color-text-secondary: #8b949e;
+    --color-bg-primary: #0d1117;
+    --color-bg-secondary: #161b22;
+    --color-border: #30363d;
+    --color-border-muted: #21262d;
+    --color-accent: #58a6ff;
+    --color-accent-hover: #79c0ff;
+    --color-accent-bg: rgba(88, 166, 255, 0.1);
+    --color-danger: #f85149;
+    --color-danger-bg: #490202;
+    --color-code-bg: #161b22;
+    --color-quote-border: #30363d;
+  }
+}
+
+:root {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+}
+
+body {
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+#toolbar {
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border);
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-shrink: 0;
+}
+
+#open-file-btn, #recent-files-btn {
+  background: var(--color-accent);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+#open-file-btn:hover, #recent-files-btn:hover {
+  background: var(--color-accent-hover);
+}
+
+#open-file-btn:focus, #recent-files-btn:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+#open-file-btn:focus:not(:focus-visible), 
+#recent-files-btn:focus:not(:focus-visible) {
+  outline: none;
+}
+
+#recent-files-container {
+  position: relative;
+  display: inline-block;
+}
+
+#recent-files-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 5px;
+  background: white;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  min-width: 300px;
+  max-width: 500px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+#recent-files-dropdown.show {
+  display: block;
+}
+
+#recent-files-list {
+  padding: 8px 0;
+}
+
+.recent-file-item {
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #24292e;
+  border-bottom: 1px solid #f6f8fa;
+  transition: background 0.1s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recent-file-item:hover {
+  background: #f6f8fa;
+}
+
+.recent-file-item:last-child {
+  border-bottom: none;
+}
+
+.recent-files-empty {
+  padding: 20px;
+  text-align: center;
+  color: #57606a;
+  font-size: 13px;
+}
+
+.clear-recent {
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #cf222e;
+  border-top: 1px solid #d0d7de;
+  text-align: center;
+  transition: background 0.1s;
+}
+
+.clear-recent:hover {
+  background: var(--color-danger-bg);
+}
+
+.clear-recent:focus {
+  background: var(--color-danger-bg);
+  outline: 2px solid var(--color-danger);
+  outline-offset: -2px;
+}
+
+.clear-recent:focus:not(:focus-visible) {
+  outline: none;
+}
+
+#file-name {
+  color: #57606a;
+  font-size: 14px;
+  font-weight: 500;
+  flex: 1;
+}
+
+.company-link {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: background 0.2s;
+  margin-left: auto;
+}
+
+.company-link:hover {
+  background: var(--color-accent-bg);
+}
+
+.company-name {
+  color: var(--color-accent);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+#content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 40px;
+}
+
+.welcome {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.welcome h1 {
+  font-size: 2.5em;
+  margin-bottom: 20px;
+  color: var(--color-text-primary);
+}
+
+.welcome p {
+  font-size: 1.1em;
+  margin-bottom: 15px;
+  color: var(--color-text-secondary);
+}
+
+.welcome ul {
+  text-align: left;
+  display: inline-block;
+  margin-top: 20px;
+}
+
+.welcome li {
+  margin: 8px 0;
+  color: var(--color-text-secondary);
+}
+
+.company-info {
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px solid var(--color-border);
+}
+
+.company-info p {
+  font-size: 0.95em;
+  margin-bottom: 8px;
+}
+
+.company-info a {
+  color: var(--color-accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.company-info a:hover {
+  text-decoration: underline;
+}
+
+/* Markdown content styling */
+#content h1, #content h2, #content h3, #content h4, #content h5, #content h6 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+#content h1 {
+  font-size: 2em;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.3em;
+}
+
+#content h2 {
+  font-size: 1.5em;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.3em;
+}
+
+#content h3 { font-size: 1.25em; }
+#content h4 { font-size: 1em; }
+#content h5 { font-size: 0.875em; }
+#content h6 { 
+  font-size: 0.85em; 
+  color: var(--color-text-secondary); 
+}
+
+#content p {
+  margin-bottom: 16px;
+}
+
+#content a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+#content a:hover {
+  text-decoration: underline;
+}
+
+#content ul, #content ol {
+  margin-bottom: 16px;
+  padding-left: 2em;
+}
+
+#content li {
+  margin: 4px 0;
+}
+
+#content code {
+  background: var(--color-code-bg);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+#content pre {
+  background: var(--color-code-bg);
+  padding: 16px;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin-bottom: 16px;
+  border: 1px solid var(--color-border);
+}
+
+#content pre code {
+  background: none;
+  padding: 0;
+  font-size: 0.85em;
+}
+
+#content blockquote {
+  border-left: 4px solid var(--color-quote-border);
+  padding-left: 16px;
+  margin: 16px 0;
+  color: var(--color-text-secondary);
+}
+
+#content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+#content table th,
+#content table td {
+  padding: 8px 13px;
+  border: 1px solid var(--color-border-muted);
+}
+
+#content table th {
+  background: var(--color-bg-secondary);
+  font-weight: 600;
+}
+
+#content table tr:nth-child(even) {
+  background: var(--color-bg-secondary);
+}
+
+#content img {
+  max-width: 100%;
+  height: auto;
+}
+
+#content hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 24px 0;
+}
+
+/* Error message styling */
+.error-message {
+  color: var(--color-danger);
+}
+
+.error-message h1 {
+  color: var(--color-danger);
+}
+
+.error-message button {
+  background: var(--color-accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.error-message button:hover {
+  background: var(--color-accent-hover);
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-muted);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-secondary);
+}
+
+/* Focus styles for accessibility */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+.recent-file-item:focus {
+  background: var(--color-bg-secondary);
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}

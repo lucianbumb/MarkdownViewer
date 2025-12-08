@@ -24,7 +24,6 @@
     "AI",
     "documentation"
   ],
-  "author": "",
   "license": "MIT",
   "build": {
     "appId": "net.elgibesolutions.markdownviewer",

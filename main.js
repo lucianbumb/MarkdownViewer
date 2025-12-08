@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -54,8 +54,12 @@ function createWindow(filePath = null) {
     minHeight: 400,
     autoHideMenuBar: true,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
+      nodeIntegration: false,
+      contextIsolation: true,
+      sandbox: true,
+      preload: path.join(__dirname, 'preload.js'),
+      safeDialogs: true,
+      safeDialogsMessage: 'Are you sure?'
     },
     icon: path.join(__dirname, 'markdownviewer.ico'),
   });
@@ -64,6 +68,17 @@ function createWindow(filePath = null) {
   mainWindow.setMenuBarVisibility(false);
 
   mainWindow.loadFile('index.html');
+
+  // Block any new windows/popups
+  mainWindow.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
+
+  // Prevent navigation away from our app content
+  mainWindow.webContents.on('will-navigate', (event, url) => {
+    const currentUrl = mainWindow.webContents.getURL();
+    if (url !== currentUrl) {
+      event.preventDefault();
+    }
+  });
 
   // Open file if provided as argument
   if (filePath) {
@@ -83,6 +98,12 @@ function createWindow(filePath = null) {
 }
 
 app.whenReady().then(() => {
+  // Ensure proper Windows taskbar icon grouping and branding
+  try {
+    app.setAppUserModelId('net.elgibesolutions.markdownviewer');
+  } catch (_) {
+    // no-op if not on Windows or already set
+  }
   // Load recent files on startup
   loadRecentFiles();
   
@@ -156,5 +177,19 @@ ipcMain.handle('clear-recent-files', async () => {
   saveRecentFiles();
   if (mainWindow) {
     mainWindow.webContents.send('recent-files-updated', recentFiles);
+  }
+});
+
+// Open external links safely via main process
+ipcMain.handle('open-external', async (_event, url) => {
+  try {
+    // Allow only http/https schemes
+    if (typeof url === 'string' && /^(https?:)\/\//i.test(url)) {
+      await shell.openExternal(url);
+      return { success: true };
+    }
+    return { success: false, error: 'Blocked URL scheme' };
+  } catch (err) {
+    return { success: false, error: err.message };
   }
 });

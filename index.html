@@ -3,22 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
     <title>Markdown Viewer</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="vendor/hljs-github.css" media="(prefers-color-scheme: light)">
+    <link rel="stylesheet" href="vendor/hljs-github-dark.css" media="(prefers-color-scheme: dark)">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="toolbar">
         <button id="open-file-btn" title="Open Markdown File">📂 Open File</button>
         <div id="recent-files-container">
-            <button id="recent-files-btn" title="Recent Files">🕒 Recent</button>
-            <div id="recent-files-dropdown" class="dropdown-content">
+            <button id="recent-files-btn" 
+                    title="Recent Files" 
+                    aria-haspopup="true" 
+                    aria-expanded="false">🕒 Recent</button>
+            <div id="recent-files-dropdown" 
+                 class="dropdown-content" 
+                 role="menu" 
+                 aria-label="Recent Files">
                 <div id="recent-files-list"></div>
-                <div id="clear-recent" class="clear-recent">Clear History</div>
+                <div id="clear-recent" class="clear-recent" role="menuitem" tabindex="0">Clear History</div>
             </div>
         </div>
         <span id="file-name">No file opened</span>
-        <a href="https://elgibesolutions.net/" target="_blank" class="company-link" title="Visit ElgibeSolutions">
+        <a href="https://elgibesolutions.net/" class="company-link" title="Visit ElgibeSolutions">
             <span class="company-name">ElgibeSolutions</span>
         </a>
     </div>
@@ -34,10 +42,13 @@
             </ul>
             <div class="company-info">
                 <p>Developed by <strong>ElgibeSolutions</strong></p>
-                <p><a href="https://elgibesolutions.net/" target="_blank">elgibesolutions.net</a></p>
+                <p><a href="https://elgibesolutions.net/">elgibesolutions.net</a></p>
             </div>
         </div>
     </main>
+    <script src="node_modules/dompurify/dist/purify.min.js"></script>
+    <script src="node_modules/marked/marked.min.js"></script>
+    <script src="node_modules/highlight.js/build/highlight.min.js"></script>
     <script src="renderer.js"></script>
 </body>
 </html>
