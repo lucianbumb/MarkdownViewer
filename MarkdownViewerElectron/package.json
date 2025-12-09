@@ -1,6 +1,6 @@
 {
   "name": "markdown-viewer",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Quick and easy Markdown file viewer. In the world of AI, countless .md files are created daily. This tool provides instant viewing of markdown files with beautiful rendering, syntax highlighting, and seamless integration with Windows Explorer. Set it as your default .md viewer for effortless access.",
   "main": "main.js",
   "homepage": "https://markdownviewer.elgibesolutions.work/",
@@ -24,21 +24,18 @@
     "AI",
     "documentation"
   ],
+  "author": "",
   "license": "MIT",
   "build": {
     "appId": "net.elgibesolutions.markdownviewer",
     "productName": "Markdown Viewer",
     "copyright": "Copyright © 2025 ElgibeSolutions",
-    "files": [
-      "**/*",
-      "!dist"
-    ],
     "win": {
       "target": [
         "nsis",
         "appx"
       ],
-      "icon": "build/icons/icon.ico",
+      "icon": "markdownviewer.ico",
       "fileAssociations": [
         {
           "ext": "md",
@@ -59,10 +56,8 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "Markdown Viewer",
-      "installerIcon": "build/icons/icon.ico",
-      "uninstallerIcon": "build/icons/icon.ico",
-      "installerHeaderIcon": "build/icons/icon.ico"
+      "installerHeaderIcon": "markdownviewer.ico",
+      "installerSidebar": "markdownviewer.png"
     },
     "appx": {
       "applicationId": "MarkdownViewer",

@@ -2,6 +2,7 @@ const { ipcRenderer } = require('electron');
 const { marked } = require('marked');
 const hljs = require('highlight.js');
 const DOMPurify = require('dompurify');
+const fs = require('fs');
 
 // Configure marked
 marked.setOptions({
@@ -115,33 +116,15 @@ document.addEventListener('drop', async (e) => {
   
   if (e.dataTransfer.files.length > 0) {
     const file = e.dataTransfer.files[0];
-    
-    // Check if it's a markdown file
-    if (file.name.match(/\.(md|markdown|mdown|mkd)$/i)) {
-      // Read file content using File API
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-        const content = event.target.result;
-        // Use file.path if available (Electron), otherwise use file.name
-        const filePath = file.path || file.name;
-        await renderMarkdown(filePath, content);
-        
-        // If we have a real path, add to recent files
-        if (file.path) {
-          await ipcRenderer.invoke('add-to-recent', file.path);
-        }
-      };
-      reader.readAsText(file);
+    if (file.path.match(/\.(md|markdown|mdown|mkd)$/i)) {
+      const content = fs.readFileSync(file.path, 'utf-8');
+      await renderMarkdown(file.path, content);
+      await ipcRenderer.invoke('add-to-recent', file.path);
     }
   }
 });
 
 document.addEventListener('dragover', (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-});
-
-document.addEventListener('dragenter', (e) => {
   e.preventDefault();
   e.stopPropagation();
 });
@@ -162,9 +145,11 @@ ipcRenderer.on('recent-files-updated', (event, files) => {
   updateRecentFilesList();
 });
 
-// Listen for keyboard shortcuts from main process
 ipcRenderer.on('trigger-open-file', () => {
-  document.getElementById('open-file-btn').click();
+  const openButton = document.getElementById('open-file-btn');
+  if (openButton) {
+    openButton.click();
+  }
 });
 
 ipcRenderer.on('trigger-recent-files', () => {
