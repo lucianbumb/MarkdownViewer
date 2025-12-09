@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, globalShortcut } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, globalShortcut, nativeImage } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -7,6 +7,17 @@ let pendingFilePath = null;
 let recentFiles = [];
 const MAX_RECENT_FILES = 10;
 const RECENT_FILES_PATH = path.join(app.getPath('userData'), 'recent-files.json');
+const ICON_FILENAME = 'markdownviewer.ico';
+
+function resolveIconPath() {
+  if (app.isPackaged) {
+    const packagedIconPath = path.join(process.resourcesPath, ICON_FILENAME);
+    if (fs.existsSync(packagedIconPath)) {
+      return packagedIconPath;
+    }
+  }
+  return path.join(__dirname, ICON_FILENAME);
+}
 
 // Load recent files from disk
 function loadRecentFiles() {
@@ -47,13 +58,15 @@ function addToRecentFiles(filePath) {
 }
 
 function createWindow(filePath = null) {
+  const iconPath = resolveIconPath();
+  const iconImage = nativeImage.createFromPath(iconPath);
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
     minWidth: 600,
     minHeight: 400,
     autoHideMenuBar: true,
-    icon: path.join(__dirname, 'markdownviewer.ico'),
+    icon: iconImage && !iconImage.isEmpty() ? iconImage : iconPath,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -83,6 +96,7 @@ function createWindow(filePath = null) {
 }
 
 app.whenReady().then(() => {
+  app.setAppUserModelId('net.elgibesolutions.markdownviewer');
   // Load recent files on startup
   loadRecentFiles();
   
