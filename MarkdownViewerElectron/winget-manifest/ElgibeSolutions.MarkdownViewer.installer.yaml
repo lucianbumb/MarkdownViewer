@@ -20,6 +20,6 @@ FileExtensions:
 Installers:
 - Architecture: x64
   InstallerUrl: https://github.com/lucianbumb/MarkdownViewer/releases/download/v1.0.4/Markdown.Viewer.Setup.1.0.4.exe
-  InstallerSha256: A57411CFDE5753EE6EBC043DE759FE849BCE6F48BE3DA0EC79FB0DD3129EE161
+  InstallerSha256: AF92E51C8D4139D3050514B4EB0B1282B671DF6EB41D5E2C434D315E45969DA4
 ManifestType: installer
 ManifestVersion: 1.6.0
