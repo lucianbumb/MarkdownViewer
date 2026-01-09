@@ -13,13 +13,23 @@ try {
     process.exit(1);
   }
 
-  // Change to dist directory and run sign-files
-  process.chdir(distDir);
-  
-  console.log('📁 Working directory:', distDir);
-  console.log('🔏 Running: sign-files sign all\n');
-  
-  execSync('sign-files sign all', { stdio: 'inherit' });
+  const signSteps = [
+    { dir: distDir, cmd: 'sign-files sign all' },
+    { dir: path.join(distDir, 'win-unpacked'), cmd: 'sign-files sign exe' },
+    { dir: path.join(distDir, 'win-unpacked', 'resources'), cmd: 'sign-files sign exe' },
+  ];
+
+  for (const step of signSteps) {
+    if (!fs.existsSync(step.dir)) {
+      continue;
+    }
+
+    process.chdir(step.dir);
+    console.log('📁 Working directory:', step.dir);
+    console.log(`🔏 Running: ${step.cmd}\n`);
+    execSync(step.cmd, { stdio: 'inherit' });
+    console.log('');
+  }
   
   console.log('\n✅ All files signed successfully!');
   console.log('📦 Ready for Microsoft Store submission\n');

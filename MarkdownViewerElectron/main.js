@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, globalShortcut } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, globalShortcut, nativeImage } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -10,9 +10,22 @@ const RECENT_FILES_PATH = path.join(app.getPath('userData'), 'recent-files.json'
 const ICON_FILENAME = 'markdownviewer.ico';
 const APP_USER_MODEL_ID = 'net.elgibesolutions.markdownviewer';
 
+// Ensure a stable AppUserModelId as early as possible on Windows.
+// This improves taskbar icon consistency (especially when launched via file association).
+if (process.platform === 'win32') {
+  app.setAppUserModelId(APP_USER_MODEL_ID);
+}
+
 function resolveIconPath() {
   const candidates = [];
   if (app.isPackaged) {
+    // Installed/packaged app: prefer an icon next to the EXE (used by some shortcuts)
+    // and then fall back to the resources directory.
+    try {
+      candidates.push(path.join(path.dirname(process.execPath), ICON_FILENAME));
+    } catch {
+      // ignore
+    }
     candidates.push(path.join(process.resourcesPath, ICON_FILENAME));
   }
   candidates.push(path.join(__dirname, ICON_FILENAME));
@@ -60,18 +73,42 @@ function addToRecentFiles(filePath) {
 
 function createWindow(filePath = null) {
   const iconPath = resolveIconPath();
+  const iconImage = iconPath ? nativeImage.createFromPath(iconPath) : null;
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
     minWidth: 600,
     minHeight: 400,
     autoHideMenuBar: true,
-    icon: iconPath || undefined,
+    icon: iconImage && !iconImage.isEmpty() ? iconImage : (iconPath || undefined),
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
     },
   });
+
+  if (process.platform === 'win32' && iconPath) {
+    // Explicitly apply taskbar/window icon on Windows.
+    // `setAppDetails` influences the taskbar icon for this window.
+    try {
+      mainWindow.setAppDetails({
+        appId: APP_USER_MODEL_ID,
+        appIconPath: iconPath,
+        appIconIndex: 0,
+        relaunchDisplayName: app.getName(),
+      });
+    } catch {
+      // Best-effort; older Windows versions or shells may ignore this.
+    }
+
+    try {
+      if (iconImage && !iconImage.isEmpty()) {
+        mainWindow.setIcon(iconImage);
+      }
+    } catch {
+      // Best-effort; fall back to packaged executable icon.
+    }
+  }
 
   // Remove the menu bar completely
   mainWindow.setMenuBarVisibility(false);
@@ -95,10 +132,29 @@ function createWindow(filePath = null) {
   });
 }
 
-app.whenReady().then(() => {
-  if (process.platform === 'win32') {
-    app.setAppUserModelId(APP_USER_MODEL_ID);
-  }
+const gotSingleInstanceLock = app.requestSingleInstanceLock();
+
+if (!gotSingleInstanceLock) {
+  app.quit();
+} else {
+  // Forward file-open attempts to the primary instance (Windows/Linux).
+  app.on('second-instance', (event, argv) => {
+    const possibleFilePath = argv.find(arg => arg && arg.match(/\.(md|markdown|mdown|mkd)$/i));
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) {
+        mainWindow.restore();
+      }
+      mainWindow.focus();
+      if (possibleFilePath) {
+        mainWindow.webContents.send('open-file', possibleFilePath);
+        addToRecentFiles(possibleFilePath);
+      }
+    } else {
+      createWindow(possibleFilePath || null);
+    }
+  });
+
+  app.whenReady().then(() => {
   // Load recent files on startup
   loadRecentFiles();
   
@@ -126,7 +182,8 @@ app.whenReady().then(() => {
       createWindow();
     }
   });
-});
+  });
+}
 
 // Handle opening file when app is already running
 app.on('open-file', (event, filePath) => {
